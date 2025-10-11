@@ -1,45 +1,39 @@
-import inquirer from 'inquirer';
+
 import { showSplash } from './modules/splash/splash';
-import { VersionService } from './api-client/services/VersionService';
+import { mainMenu } from './menus/mainMenu';
 
-async function mainMenu() {
-  const choices = [
-    { name: 'Check API Version', value: 'checkVersion' },
-    { name: 'Exit', value: 'exit' },
-  ];
-  while (true) {
-    const { action } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'action',
-        message: 'Main Menu',
-        choices,
-      },
-    ]);
-    if (action === 'checkVersion') {
-      try {
-        const versionInfo = await VersionService.getVersion();
-        console.log('\nAPI Version:', versionInfo.version);
-        console.log('Service:', versionInfo.service);
-        console.log('Timestamp:', versionInfo.timestamp, '\n');
-      } catch (err) {
-        console.error('Failed to fetch API version:', err);
-      }
-    } else if (action === 'exit') {
-      console.log('Goodbye!');
-      process.exit(0);
-    }
-  }
-}
-
-export async function runCli() {
+async function runCli() {
   showSplash();
   // Wait a moment for splash effect
   await new Promise((res) => setTimeout(res, 900));
   await mainMenu();
 }
 
-// If run directly
+
+async function routeCommand(args: string[]) {
+  // npr dev version api => API version
+  if (args[0] === 'version' && args[1] === 'api') {
+    const { runVersionCommand } = await import('./commands/version');
+    await runVersionCommand();
+    process.exit(0);
+  }
+  // npr dev version => CLI version
+  if (args[0] === 'version' && !args[1]) {
+    const { printCliVersion } = await import('./commands/cliVersion');
+    printCliVersion();
+    process.exit(0);
+  }
+  // Add more direct command routes here as needed
+  // Fallback to interactive CLI
+  await runCli();
+}
+
 if (require.main === module) {
-  runCli();
+  // Remove node, script, and npr/dev if present
+  const argv = process.argv.slice(2).filter(arg => !['dev', 'start', 'run'].includes(arg));
+  if (argv.length > 0) {
+    routeCommand(argv);
+  } else {
+    runCli();
+  }
 }
