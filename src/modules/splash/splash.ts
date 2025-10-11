@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import figlet from 'figlet';
 import gradient from 'gradient-string';
-import { THEME } from '../../config/theme'; // Generic GSC theme
+import { getTheme } from '../../config/theme'; // Generic GSC theme
 
 interface PackageJSON { version?: string; name?: string; }
 
@@ -18,7 +18,8 @@ function readPackageVersion(): PackageJSON {
 }
 
 function buildGradient(text: string): string {
-  return (gradient as any)(...THEME.gradient)(text);
+  const theme = getTheme();
+  return (gradient as any)(...theme.gradient)(text);
 }
 
 interface FigletResult { text: string; width: number; font?: string; }
@@ -86,8 +87,9 @@ export function showSplash() {
 
   const versionRaw = `v${version}`;
   const mottoRaw = 'Enabling neurodivergent minds to flow.';
-  const versionText = chalk.hex(THEME.versionColor).bold(versionRaw);
-  const motto = chalk.hex(THEME.mottoColor).italic(mottoRaw);
+  const theme = getTheme();
+  const versionText = chalk.hex(theme.versionColor).bold(versionRaw);
+  const motto = chalk.hex(theme.mottoColor).italic(mottoRaw);
 
   // A: tighten spacing -> single blank line between sections (title, separator, meta)
   // B: gradient separator line sized to title width (rawLinesWidth)

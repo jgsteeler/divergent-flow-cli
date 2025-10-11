@@ -19,6 +19,8 @@ export type OpenAPIConfig = {
     ENCODE_PATH?: ((path: string) => string) | undefined;
 };
 
+
+// Make BASE dynamic from config
 export const OpenAPI: OpenAPIConfig = {
     BASE: 'http://localhost:8080',
     VERSION: '0.1.0',
