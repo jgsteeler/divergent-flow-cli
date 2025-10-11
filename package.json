@@ -4,10 +4,12 @@
   "description": "Divergent Flow CLI - tools empowering neurodivergent minds to flow.",
   "main": "dist/index.js",
   "bin": {
-    "divergent-flow": "dist/index.js"
+    "divergent-flow": "dist/index.js",
+    "dflw": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+  "build": "tsc",
+  "postbuild": "node ./add-shebang.js",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "generate:api-client": "openapi --input http://localhost:8080/openapi.json --output src/api-client --client axios --useOptions --useUnionTypes",

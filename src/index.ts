@@ -18,8 +18,10 @@ import { OpenAPI } from './api-client/core/OpenAPI';
 
 async function runCli() {
   showSplash();
-  // Wait a moment for splash effect
-  await new Promise((res) => setTimeout(res, 900));
+  // Wait 1.5 seconds for splash effect
+  await new Promise((res) => setTimeout(res, 1500));
+  // Clear the terminal before showing the menu
+  process.stdout.write('\x1Bc');
   await mainMenu();
 }
 
