@@ -4,13 +4,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.1.2](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.1...v0.1.2) (2025-10-11)
 
-
 ### Features
 
 * enhance CLI with improved menu display and shebang script ([082f078](https://github.com/jgsteeler/divergent-flow-cli/commit/082f0786b508a3cc5884276a80215e4ae562354e))
 
 ### 0.1.1 (2025-10-11)
-
 
 ### Features
 
