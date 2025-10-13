@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.2...v0.1.3) (2025-10-13)
+
+
+### Features
+
+* add cors dependency to enhance API request handling ([7339da0](https://github.com/jgsteeler/divergent-flow-cli/commit/7339da0728e0bc033a23a04b6f1646866ad00bef))
+* refactor API client structure and implement VersionService for version management ([5f525c6](https://github.com/jgsteeler/divergent-flow-cli/commit/5f525c6b67b00d5f31855a5f7ada6a3124428c9c))
+
 ### [0.1.2](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.1...v0.1.2) (2025-10-11)
 
 ### Features
