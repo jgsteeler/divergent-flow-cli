@@ -14,7 +14,7 @@ import 'reflect-metadata';
 import { showSplash } from './modules/splash/splash';
 import { mainMenu } from './menus/mainMenu';
 import { ensureConfigInitialized, getConfig } from './commands/config';
-import { OpenAPI } from './api-client/core/OpenAPI';
+
 
 async function runCli() {
   showSplash();
@@ -59,8 +59,7 @@ if (require.main === module) {
       process.exit(0);
     }
     await ensureConfigInitialized();
-    // Set OpenAPI.BASE from config before any API calls
-    OpenAPI.BASE = getConfig('BASE_API_URL', 'http://localhost:8080');
+  // API base URL is now handled in VersionService via config
     if (argv.length > 0) {
       await routeCommand(argv);
     } else {
