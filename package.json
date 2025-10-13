@@ -12,7 +12,7 @@
     "postbuild": "node ./add-shebang.js",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "generate:api-client": "openapi --input http://localhost:8080/openapi.json --output src/api-client --client axios --useOptions --useUnionTypes",
+    
     "test": "jest",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
@@ -37,7 +37,7 @@
     "@types/node": "^20.11.30",
     "axios": "^1.12.2",
     "jest": "^30.2.0",
-    "openapi-typescript-codegen": "^0.29.0",
+    
     "standard-version": "^9.5.0",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
