@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.3...v0.1.4) (2025-10-22)
+
+
+### Features
+
+* add USER_ID configuration and support for removing config keys ([e39b03d](https://github.com/jgsteeler/divergent-flow-cli/commit/e39b03d9d7d74b2edb03562f485a20df91942c77))
+* enhance runDumpCommand to prompt for input when no arguments are provided ([f291f44](https://github.com/jgsteeler/divergent-flow-cli/commit/f291f44d82a4fe8201c06bacebfa2951f12fb10a))
+* update configuration keys from GRIND_MODE and BASE_API_URL to APP_MODE and API_BASE_URL ([5e2ab68](https://github.com/jgsteeler/divergent-flow-cli/commit/5e2ab685fad42e2fb384a468b95c3b2e8fb734ad))
+
+
+### Bug Fixes
+
+* Handle API response structure correctly in captures list… ([7d0f244](https://github.com/jgsteeler/divergent-flow-cli/commit/7d0f24409ca5e44bb3d03983dedd22c5d9f77211))
+
 ### [0.1.3](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.2...v0.1.3) (2025-10-13)
 
 
