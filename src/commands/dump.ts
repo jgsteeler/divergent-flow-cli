@@ -94,7 +94,30 @@ export async function createDumpCommand(): Promise<DumpCommand> {
  */
 export async function runDumpCommand(args: string[]): Promise<void> {
   const dumpCommand = await createDumpCommand();
-  const text = args.join(' ');
+  let text = args.join(' ');
+
+  // If no inline args provided, prompt once for input (no splash)
+  if (!text || text.trim().length === 0) {
+    const { input } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'input',
+        message: 'Capture:',
+      },
+    ]);
+    if (!input || input.trim().length === 0) {
+      // nothing provided - exit silently
+      return;
+    }
+    text = input;
+  }
+
+  // Strip surrounding quotes if user included them literally
+  text = text.trim();
+  if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
+    text = text.slice(1, -1);
+  }
+
   await dumpCommand.dumpSingle(text);
 }
 
