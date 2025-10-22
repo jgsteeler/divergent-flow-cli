@@ -1,14 +1,7 @@
 export { getConfig } from '../config/config';
 
-import { getConfig, setConfig, grindRcPath } from '../config/config';
+import { getConfig, setConfig, grindRcPath, removeConfig, REQUIRED_KEYS } from '../config/config';
 import inquirer from 'inquirer';
-
-
-const REQUIRED_KEYS = [
-  'GRIND_MODE',
-  'BASE_API_URL',
-  'LOG_LEVEL',
-];
 
 const GRIND_MODE_CHOICES = ['divergent', 'typical'];
 const LOG_LEVEL_CHOICES = ['info', 'warn', 'error', 'debug'];
@@ -18,16 +11,16 @@ async function runInitWizard() {
   const answers: Record<string, any> = await inquirer.prompt([
     {
       type: 'list',
-      name: 'GRIND_MODE',
-      message: 'Choose your GRIND_MODE:',
+      name: 'APP_MODE',
+      message: 'Choose your APP_MODE:',
       choices: GRIND_MODE_CHOICES,
-      default: getConfig('GRIND_MODE', 'divergent'),
+      default: getConfig('APP_MODE', 'divergent'),
     },
     {
       type: 'input',
-      name: 'BASE_API_URL',
+      name: 'API_BASE_URL',
       message: 'Base API URL (e.g. http://localhost:3001):',
-      default: getConfig('BASE_API_URL', 'http://localhost:3001'),
+      default: getConfig('API_BASE_URL', 'http://localhost:3001'),
       validate: v => /^https?:\/\/.+/.test(v) || 'Enter a valid URL (http/https)',
     },
     {
@@ -80,5 +73,19 @@ export async function runConfigCommand(args: string[]) {
     console.log(`Set ${args[1]} = ${args[2]} in .grindrc`);
     return;
   }
-  console.log('Usage: config [list|get <key>|set <key> <value>|init]');
+  if (args[0] === 'unset' && args[1]) {
+    // Prevent removing required keys (config layer also protects)
+    if (REQUIRED_KEYS.includes(args[1])) {
+      console.log(`Cannot unset required key ${args[1]}`);
+      return;
+    }
+    const removed = removeConfig(args[1]);
+    if (removed) {
+      console.log(`Removed ${args[1]} from .grindrc`);
+    } else {
+      console.log(`${args[1]} not found in .grindrc`);
+    }
+    return;
+  }
+  console.log('Usage: config [list|get <key>|set <key> <value>|unset <key>|init]');
 }

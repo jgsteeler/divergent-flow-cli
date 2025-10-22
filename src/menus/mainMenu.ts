@@ -4,12 +4,14 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import { runVersionCommand } from '../commands/version';
 import { getTheme } from '../config/theme';
+import { capturesMenu } from './capturesMenu';
 
 
 export async function mainMenu() {
   const theme = getTheme();
   const choices = [
     { name: chalk.hex(theme.versionColor)('  Check API Version  '), value: 'checkVersion' },
+    { name: chalk.hex(theme.gradient[0])('  📝 Captures  '), value: 'captures' },
     { name: chalk.hex(theme.mottoColor)('  Exit  '), value: 'exit' },
   ];
   while (true) {
@@ -41,6 +43,8 @@ export async function mainMenu() {
     console.log('\n');
     if (action === 'checkVersion') {
       await runVersionCommand();
+    } else if (action === 'captures') {
+      await capturesMenu();
     } else if (action === 'exit') {
       console.log(chalk.hex(theme.mottoColor)('\nGoodbye!\n'));
       process.exit(0);
