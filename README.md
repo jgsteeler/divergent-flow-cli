@@ -71,6 +71,38 @@ This CLI uses [tsyringe](https://github.com/microsoft/tsyringe) for dependency i
 - `src/di/` — Dependency injection container setup
 - `src/index.ts` — CLI entry point and command router
 
+## CLI Configuration (`.grindrc`)
+
+The CLI stores user configuration in `~/.grindrc` as JSON. Some important keys:
+
+- `APP_MODE` — UI mode, one of `divergent` or `typical`. Set by the interactive init wizard.
+- `API_BASE_URL` — Base URL for the API (e.g. `http://localhost:3001`). The CLI uses this for all API calls.
+- `USER_ID` — Optional: an explicit user id to attach to captures. If set, the CLI will send this `userId` when creating captures; otherwise the CLI falls back to a placeholder id.
+- `LOG_LEVEL` — Logging level used by the CLI (`info`, `warn`, `error`, `debug`).
+
+Examples:
+
+Set or update keys using the CLI `config` command:
+
+```bash
+# interactive init (prompts for APP_MODE, API_BASE_URL, LOG_LEVEL)
+node dist/index.js config init
+
+# set USER_ID
+node dist/index.js config set USER_ID e1ccf5f8-e1d6-4541-ae0a-72946f5fb3d9
+
+# unset/remove USER_ID
+node dist/index.js config unset USER_ID
+
+# view current config
+node dist/index.js config list
+
+# get a single value
+node dist/index.js config get USER_ID
+```
+
+Note: `USER_ID` is optional and intentionally not part of the interactive init wizard.
+
 ## License
 
 MIT

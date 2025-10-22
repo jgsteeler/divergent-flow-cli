@@ -6,12 +6,17 @@ import { getConfig } from '../config/config';
 @injectable()
 export class CaptureService implements ICaptureService {
   private getBaseUrl(): string {
-    return getConfig('API_BASE_URL', 'http://localhost:8080');
+    const raw = getConfig('API_BASE_URL', 'http://localhost:8080');
+    // Normalize: remove any trailing slashes so joining paths doesn't produce //
+    if (typeof raw === 'string') return raw.replace(/\/+$/, '');
+    return String(raw).replace(/\/+$/, '');
   }
 
   private getUserId(): string {
-    // For now, assuming user ID 1 as mentioned in requirements
-    // TODO: In the future, this could come from config or authentication
+    // Prefer an explicit USER_ID from config if present, otherwise fall back to a default placeholder
+    const cfg = getConfig('USER_ID');
+    if (cfg && typeof cfg === 'string' && cfg.trim().length > 0) return cfg;
+    // default placeholder until proper auth/user management is implemented
     return 'e1ccf5f8-e1d6-4541-ae0a-72946f5fb3d9';
   }
 
