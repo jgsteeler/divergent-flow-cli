@@ -35,7 +35,7 @@ describe('runConfigCommand variants', () => {
 
   it('init should invoke inquirer', async () => {
     jest.spyOn(fs, 'readFileSync').mockImplementation(() => { throw new Error('no'); });
-    const promptSpy = jest.spyOn(inquirer, 'prompt').mockResolvedValue({ GRIND_MODE: 'divergent', BASE_API_URL: 'http://x', LOG_LEVEL: 'info' } as any);
+  const promptSpy = jest.spyOn(inquirer, 'prompt').mockResolvedValue({ APP_MODE: 'divergent', API_BASE_URL: 'http://x', LOG_LEVEL: 'info' } as any);
     const writeSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
     await runConfigCommand(['init']);
     expect(promptSpy).toHaveBeenCalled();

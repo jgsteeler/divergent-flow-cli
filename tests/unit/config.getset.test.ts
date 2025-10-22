@@ -25,7 +25,7 @@ describe('getConfig / setConfig', () => {
     expect(parsed.MY_KEY).toBe('myValue');
   });
 
-  it('setConfig should enforce GRIND_MODE validation', () => {
-    expect(() => setConfig('GRIND_MODE', 'invalid-mode')).toThrow();
+  it('setConfig should enforce APP_MODE validation', () => {
+    expect(() => setConfig('APP_MODE', 'invalid-mode')).toThrow();
   });
 });

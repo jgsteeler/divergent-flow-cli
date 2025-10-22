@@ -5,8 +5,8 @@ import inquirer from 'inquirer';
 
 
 const REQUIRED_KEYS = [
-  'GRIND_MODE',
-  'BASE_API_URL',
+  'APP_MODE',
+  'API_BASE_URL',
   'LOG_LEVEL',
 ];
 
@@ -18,16 +18,16 @@ async function runInitWizard() {
   const answers: Record<string, any> = await inquirer.prompt([
     {
       type: 'list',
-      name: 'GRIND_MODE',
-      message: 'Choose your GRIND_MODE:',
+      name: 'APP_MODE',
+      message: 'Choose your APP_MODE:',
       choices: GRIND_MODE_CHOICES,
-      default: getConfig('GRIND_MODE', 'divergent'),
+      default: getConfig('APP_MODE', 'divergent'),
     },
     {
       type: 'input',
-      name: 'BASE_API_URL',
+      name: 'API_BASE_URL',
       message: 'Base API URL (e.g. http://localhost:3001):',
-      default: getConfig('BASE_API_URL', 'http://localhost:3001'),
+      default: getConfig('API_BASE_URL', 'http://localhost:3001'),
       validate: v => /^https?:\/\/.+/.test(v) || 'Enter a valid URL (http/https)',
     },
     {

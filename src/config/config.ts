@@ -34,10 +34,10 @@ export function getConfig(key: string, def?: any): any {
 
 // Set config value in rc
 export function setConfig(key: string, value: any) {
-  if (key === 'GRIND_MODE') {
+  if (key === 'APP_MODE') {
     const allowed = ['divergent', 'typical'];
     if (!allowed.includes(String(value).toLowerCase())) {
-      throw new Error(`GRIND_MODE must be one of: divergent, typical`);
+      throw new Error(`APP_MODE must be one of: divergent, typical`);
     }
     value = String(value).toLowerCase();
   }
