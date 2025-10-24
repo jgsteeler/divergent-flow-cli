@@ -7,6 +7,7 @@ function printHelp() {
   console.log(`  config [list|get <key>|set <key> <value>]  View or update CLI config (.grindrc)`);
   console.log(`  dump <text>       Quick capture text`);
   console.log(`  dump session      Start interactive dump session`);
+  console.log(`  dumps             Start interactive dump session (alias)`);
   console.log(`  div               Launch divergent mode dashboard`);
   console.log(`  -h, --help        Show this help message\n`);
   console.log(`If no command is given, the typical mode menu will launch.\n`);
@@ -58,6 +59,12 @@ async function routeCommand(args: string[]) {
   if (args[0] === 'dump') {
     const { runDumpCommand } = await import('./commands/dump');
     await runDumpCommand(args.slice(1));
+    process.exit(0);
+  }
+  // npm dev dumps => Start dump session (alias)
+  if (args[0] === 'dumps') {
+    const { runDumpSession } = await import('./commands/dump');
+    await runDumpSession();
     process.exit(0);
   }
   // npm dev div => Divergent mode dashboard
