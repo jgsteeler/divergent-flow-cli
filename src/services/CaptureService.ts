@@ -2,14 +2,13 @@ import axios from 'axios';
 import { injectable } from 'tsyringe';
 import type { ICaptureService } from '../interfaces/ICaptureService';
 import { getConfig } from '../config/config';
+import { normalizeBaseUrl, buildApiUrl } from '../utils/url';
 
 @injectable()
 export class CaptureService implements ICaptureService {
   private getBaseUrl(): string {
     const raw = getConfig('API_BASE_URL', 'http://localhost:8080');
-    // Normalize: remove any trailing slashes so joining paths doesn't produce //
-    if (typeof raw === 'string') return raw.replace(/\/+$/, '');
-    return String(raw).replace(/\/+$/, '');
+    return normalizeBaseUrl(raw as string);
   }
 
   private getUserId(): string {
@@ -32,7 +31,8 @@ export class CaptureService implements ICaptureService {
     };
 
     try {
-      await axios.post(`${baseUrl}/v1/capture`, captureData, {
+      const url = buildApiUrl(baseUrl, '/v1/capture');
+      await axios.post(url, captureData, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -50,7 +50,8 @@ export class CaptureService implements ICaptureService {
     const userId = this.getUserId();
     
     try {
-      const response = await axios.get(`${baseUrl}/v1/capture/user/${userId}?migrated=false`);
+      const url = buildApiUrl(baseUrl, `/v1/capture/user/${userId}?migrated=false`);
+      const response = await axios.get(url);
       return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
       if (axios.isAxiosError(error)) {

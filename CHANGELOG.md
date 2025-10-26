@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.5...v0.1.6) (2025-10-26)
+
+### [0.1.5](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.4...v0.1.5) (2025-10-24)
+
+
+### Features
+
+* add dumps command alias and change session to inline input ([ba9e7a7](https://github.com/jgsteeler/divergent-flow-cli/commit/ba9e7a719933ba9bddae21cb2f19458d419797f1))
+
 ### [0.1.4](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.3...v0.1.4) (2025-10-22)
 
 

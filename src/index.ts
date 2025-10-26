@@ -7,15 +7,16 @@ function printHelp() {
   console.log(`  config [list|get <key>|set <key> <value>]  View or update CLI config (.grindrc)`);
   console.log(`  dump <text>       Quick capture text`);
   console.log(`  dump session      Start interactive dump session`);
-  console.log(`  div               Launch divergent mode dashboard`);
+  console.log(`  dumps             Start interactive dump session (alias)`);
   console.log(`  -h, --help        Show this help message\n`);
-  console.log(`If no command is given, the typical mode menu will launch.\n`);
+  console.log(`If no command is given, the interactive menu will launch based on your APP_MODE config setting.\n`);
 }
 import 'reflect-metadata';
 
 
 import { showSplash } from './modules/splash/splash';
 import { mainMenu } from './menus/mainMenu';
+import { divergentDashboard } from './menus/divergentDashboard';
 import { ensureConfigInitialized, getConfig } from './commands/config';
 
 
@@ -25,7 +26,15 @@ async function runCli() {
   await new Promise((res) => setTimeout(res, 1500));
   // Clear the terminal before showing the menu
   process.stdout.write('\x1Bc');
-  await mainMenu();
+  
+  // Check APP_MODE config to determine which menu to show
+  const appMode = getConfig('APP_MODE', 'divergent');
+  
+  if (appMode === 'divergent') {
+    await divergentDashboard();
+  } else {
+    await mainMenu();
+  }
 }
 
 
@@ -60,18 +69,13 @@ async function routeCommand(args: string[]) {
     await runDumpCommand(args.slice(1));
     process.exit(0);
   }
-  // npm dev div => Divergent mode dashboard
-  if (args[0] === 'div') {
-    const { showSplash } = await import('./modules/splash/splash');
-    const { divergentDashboard } = await import('./menus/divergentDashboard');
-    
-    showSplash();
-    // Wait 1.5 seconds for splash effect
-    await new Promise((res) => setTimeout(res, 1500));
-    await divergentDashboard();
+  // npm dev dumps => Start dump session (alias)
+  if (args[0] === 'dumps') {
+    const { runDumpSession } = await import('./commands/dump');
+    await runDumpSession();
     process.exit(0);
   }
-  // Fallback to typical mode interactive CLI
+  // Fallback to interactive CLI (mode determined by APP_MODE config)
   await runCli();
 }
 

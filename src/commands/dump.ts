@@ -42,10 +42,9 @@ export class DumpCommand {
     while (true) {
       const { input } = await inquirer.prompt([
         {
-          type: 'editor',
+          type: 'input',
           name: 'input',
           message: chalk.hex(theme.gradient[0])('Capture:'),
-          postfix: '.txt',
         },
       ]);
 

@@ -6,67 +6,133 @@ import { createDumpCommand, runDumpSession } from '../commands/dump';
 import { ICaptureService } from '../interfaces/ICaptureService';
 import { container } from '../di/container';
 
+interface CaptureMenuState {
+  isRunning: boolean;
+}
+
 export async function capturesMenu(): Promise<void> {
   const theme = getTheme();
+  const state: CaptureMenuState = { isRunning: true };
   
-  while (true) {
-    // Add vertical space before menu
-    console.log('\n\n');
-    
-    // Render menu title in a box with theme color
-    const menuTitle = boxen(
-      chalk.hex(theme.borderColor).bold('📝 Captures Menu'),
-      {
-        padding: { top: 1, bottom: 1, left: 6, right: 6 },
-        margin: { top: 1, bottom: 1 },
-        borderColor: theme.borderColor,
-        borderStyle: 'round',
-        backgroundColor: undefined,
-      }
-    );
-    console.log(menuTitle);
-    
-    // Add more vertical space after title
-    console.log('\n');
-    
-    const choices = [
-      { name: chalk.hex(theme.versionColor)('  Quick Capture  '), value: 'quickCapture' },
-      { name: chalk.hex(theme.gradient[0])('  Dump Session  '), value: 'dumpSession' },
-      { name: chalk.hex(theme.gradient[1])('  List Unmigrated Captures  '), value: 'listCaptures' },
-      { name: chalk.hex(theme.mottoColor)('  ← Back to Main Menu  '), value: 'back' },
-    ];
+  while (state.isRunning) {
+    showCapturesMenuHeader(theme);
+    await handleCapturesMenuInput(state, theme);
+  }
+}
 
-    const { action } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'action',
-        message: chalk.hex(theme.gradient[1])('Select an action:'),
-        choices,
-        pageSize: 8,
-      },
-    ]);
+function showCapturesMenuHeader(theme: any): void {
+  // Add vertical space before menu
+  console.log('\n');
+  
+  // Get terminal width once
+  const terminalWidth = process.stdout.columns || 80;
+  
+  // Render centered menu title in powder blue
+  const title = '📝 CAPTURES MENU';
+  // Account for emoji taking up extra space
+  const titleDisplayLength = title.length - 1; // Emoji counts as 2 chars but displays as 1
+  const padding = Math.max(0, Math.floor((terminalWidth - titleDisplayLength) / 2));
+  const centeredTitle = ' '.repeat(padding) + chalk.hex(theme.gradient[1]).bold(title);
+  console.log(centeredTitle);
+  console.log('');
+  
+  // Two-column menu layout
+  const leftCol = [
+    chalk.hex(theme.gradient[0])('c') + chalk.hex(theme.mottoColor)(') Quick Capture'),
+    chalk.hex(theme.gradient[0])('s') + chalk.hex(theme.mottoColor)(') Dump Session'),
+  ];
+  
+  const rightCol = [
+    chalk.hex(theme.gradient[0])('l') + chalk.hex(theme.mottoColor)(') List Captures'),
+    chalk.hex(theme.gradient[0])('b') + chalk.hex(theme.mottoColor)(') Back to Main'),
+  ];
+  
+  // Calculate column width and centering
+  const colWidth = 30;
+  const menuWidth = colWidth * 2;
+  const leftPadding = Math.max(0, Math.floor((terminalWidth - menuWidth) / 2));
+  const indent = ' '.repeat(leftPadding);
+  
+  console.log('\n');
+  
+  for (let i = 0; i < Math.max(leftCol.length, rightCol.length); i++) {
+    const left = leftCol[i] || '';
+    const right = rightCol[i] || '';
+    const leftStripped = left.replace(/\x1b\[[0-9;]*m/g, '');
+    const padding = ' '.repeat(Math.max(0, colWidth - leftStripped.length));
+    console.log(`${indent}${left}${padding}${right}`);
+  }
+  
+  // Add quit option on separate line (centered)
+  const quitLine = chalk.hex(theme.gradient[0])('q') + chalk.hex(theme.mottoColor)(') Quit dflw');
+  console.log(`\n${indent}${quitLine}`);
+  console.log('\n');
+}
 
-    console.log('\n');
+async function handleCapturesMenuInput(state: CaptureMenuState, theme: any): Promise<void> {
+  const { input } = await inquirer.prompt<{ input: string }>([
+    {
+      type: 'input',
+      name: 'input',
+      message: chalk.hex(theme.gradient[1])('Enter command:'),
+    },
+  ]);
 
-    if (action === 'quickCapture') {
+  if (!input || input.trim().length === 0) {
+    return;
+  }
+
+  const cmd = input.trim().toLowerCase();
+  await handleCapturesMenuCommand(cmd, state, theme);
+}
+
+async function handleCapturesMenuCommand(cmd: string, state: CaptureMenuState, theme: any): Promise<void> {
+  switch (cmd) {
+    case 'c':
+    case 'capture':
       await handleQuickCapture(theme);
-    } else if (action === 'dumpSession') {
+      process.stdout.write('\x1Bc');
+      break;
+    
+    case 's':
+    case 'session':
+      process.stdout.write('\x1Bc');
       await runDumpSession();
-    } else if (action === 'listCaptures') {
+      process.stdout.write('\x1Bc');
+      break;
+    
+    case 'l':
+    case 'list':
       await handleListCaptures(theme);
-    } else if (action === 'back') {
-      return; // Exit to main menu
-    }
+      process.stdout.write('\x1Bc');
+      break;
+    
+    case 'b':
+    case 'back':
+      state.isRunning = false;
+      return;
+    
+    case 'q':
+    case 'quit':
+    case 'exit':
+      console.log(chalk.hex(theme.mottoColor)('\n👋 Goodbye!\n'));
+      state.isRunning = false;
+      process.exit(0);
+      return;
+    
+    default:
+      console.log(chalk.yellow(`\nUnknown command: ${cmd}`));
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      break;
   }
 }
 
 async function handleQuickCapture(theme: any): Promise<void> {
   const { text } = await inquirer.prompt([
     {
-      type: 'editor',
+      type: 'input',
       name: 'text',
       message: chalk.hex(theme.gradient[0])('Enter text to capture:'),
-      postfix: '.txt',
     },
   ]);
 

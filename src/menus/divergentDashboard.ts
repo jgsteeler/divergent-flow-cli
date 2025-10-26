@@ -3,6 +3,8 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import { getTheme } from '../config/theme';
 import { createDumpCommand, runDumpSession } from '../commands/dump';
+import { setConfig } from '../config/config';
+import { mainMenu } from './mainMenu';
 
 interface DashboardState {
   isRunning: boolean;
@@ -22,18 +24,19 @@ export async function divergentDashboard(): Promise<void> {
 }
 
 function showDashboardHeader(theme: any): void {
-  const title = boxen(
-    chalk.hex(theme.gradient[0]).bold('🌊 DIVERGENT FLOW DASHBOARD'),
-    {
-      padding: { top: 1, bottom: 1, left: 4, right: 4 },
-      margin: { top: 1, bottom: 1 },
-      borderColor: theme.borderColor,
-      borderStyle: 'round',
-      backgroundColor: undefined,
-    }
-  );
+  // Get terminal width once
+  const terminalWidth = process.stdout.columns || 80;
   
-  console.log(title);
+  // Render centered dashboard title in powder blue
+  const title = '🌊 DIVERGENT FLOW DASHBOARD';
+  // Account for emoji taking up extra space
+  const titleDisplayLength = title.length - 1; // Emoji counts as 2 chars but displays as 1
+  const padding = Math.max(0, Math.floor((terminalWidth - titleDisplayLength) / 2));
+  const centeredTitle = ' '.repeat(padding) + chalk.hex(theme.gradient[1]).bold(title);
+  
+  console.log('\n');
+  console.log(centeredTitle);
+  console.log('');
   
   // Text input area with box
   const textBox = boxen(
@@ -50,15 +53,26 @@ function showDashboardHeader(theme: any): void {
     }
   );
   
-  console.log(textBox);
+  // Center the text box
+  const boxWidth = 80; // Approximate width of the boxen
+  const boxPadding = Math.max(0, Math.floor((terminalWidth - boxWidth) / 2));
+  const boxIndent = ' '.repeat(boxPadding);
+  const centeredBox = textBox.split('\n').map(line => boxIndent + line).join('\n');
   
-  // Minimal menu at bottom
+  console.log(centeredBox);
+  
+  // Minimal menu at bottom (centered)
   const menu = chalk.hex(theme.mottoColor)('Commands: ') +
     chalk.hex(theme.gradient[0])('s') + chalk.hex(theme.mottoColor)('ession | ') +
+    chalk.hex(theme.gradient[0])('t') + chalk.hex(theme.mottoColor)('ypical | ') +
     chalk.hex(theme.gradient[0])('?') + chalk.hex(theme.mottoColor)(' help | ') +
-    chalk.hex(theme.gradient[0])('q') + chalk.hex(theme.mottoColor)(' quit');
+    chalk.hex(theme.gradient[0])('q') + chalk.hex(theme.mottoColor)(' quit dflw');
   
-  console.log('\n' + menu + '\n');
+  const menuStripped = menu.replace(/\x1b\[[0-9;]*m/g, '');
+  const menuPadding = Math.max(0, Math.floor((terminalWidth - menuStripped.length) / 2));
+  const menuIndent = ' '.repeat(menuPadding);
+  
+  console.log('\n' + menuIndent + menu + '\n');
 }
 
 async function handleDashboardInput(state: DashboardState, theme: any): Promise<void> {
@@ -90,6 +104,14 @@ async function handleSingleCharCommand(cmd: string, state: DashboardState, theme
       console.log(chalk.hex(theme.gradient[1])('\n🔥 Starting dump session...'));
       await runDumpSession();
       break;
+    
+    case 't':
+      console.log(chalk.hex(theme.gradient[1])('\n🔄 Switching to typical mode...'));
+      setConfig('APP_MODE', 'typical');
+      state.isRunning = false;
+      process.stdout.write('\x1Bc');
+      await mainMenu();
+      return;
     
     case '?':
       showHelpMenu(theme);
@@ -143,8 +165,9 @@ function showHelpMenu(theme: any): void {
     '  • All special characters preserved\n\n' +
     chalk.hex(theme.gradient[1])('🎯 Commands:') + '\n' +
     chalk.hex(theme.versionColor)('  s') + ' - Start dump session (continuous capture)\n' +
+    chalk.hex(theme.versionColor)('  t') + ' - Switch to typical mode\n' +
     chalk.hex(theme.versionColor)('  ?') + ' - Show this help menu\n' +
-    chalk.hex(theme.versionColor)('  q') + ' - Quit divergent mode\n\n' +
+    chalk.hex(theme.versionColor)('  q') + ' - Quit dflw\n\n' +
     chalk.hex(theme.mottoColor)('Press any key to continue...');
     
   const helpBox = boxen(helpContent, {
