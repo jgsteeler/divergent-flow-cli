@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-describe('USER_ID config', () => {
+describe('USER_EMAIL config', () => {
   let origHome: string | undefined;
   let getConfig: any;
   let setConfig: any;
@@ -25,9 +25,9 @@ describe('USER_ID config', () => {
     try { fs.unlinkSync('/tmp/.grindrc'); } catch {}
   });
 
-  it('set and get USER_ID via setConfig/getConfig', () => {
-    setConfig('USER_ID', 'u-xyz-123');
-    const val = getConfig('USER_ID');
-    expect(val).toBe('u-xyz-123');
+  it('set and get USER_EMAIL via setConfig/getConfig', () => {
+    setConfig('USER_EMAIL', 'test@example.com');
+    const val = getConfig('USER_EMAIL');
+    expect(val).toBe('test@example.com');
   });
 });

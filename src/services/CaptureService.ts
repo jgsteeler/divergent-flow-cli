@@ -6,22 +6,53 @@ import { normalizeBaseUrl, buildApiUrl } from '../utils/url';
 
 @injectable()
 export class CaptureService implements ICaptureService {
+  private userIdCache: string | null = null;
+
   private getBaseUrl(): string {
     const raw = getConfig('API_BASE_URL', 'http://localhost:8080');
     return normalizeBaseUrl(raw as string);
   }
 
-  private getUserId(): string {
-    // Prefer an explicit USER_ID from config if present, otherwise fall back to a default placeholder
-    const cfg = getConfig('USER_ID');
+  private getUserEmail(): string {
+    const cfg = getConfig('USER_EMAIL');
     if (cfg && typeof cfg === 'string' && cfg.trim().length > 0) return cfg;
-    // default placeholder until proper auth/user management is implemented
-    return 'e1ccf5f8-e1d6-4541-ae0a-72946f5fb3d9';
+    throw new Error('USER_EMAIL not configured. Please set it using: dflw config set USER_EMAIL <your-email>');
+  }
+
+  private async getUserIdByEmail(): Promise<string> {
+    // Return cached userId if available
+    if (this.userIdCache) {
+      return this.userIdCache;
+    }
+
+    const baseUrl = this.getBaseUrl();
+    const email = this.getUserEmail();
+    
+    try {
+      const url = buildApiUrl(baseUrl, `/v1/user/email/${encodeURIComponent(email)}`);
+      const response = await axios.get(url);
+      
+      if (response.data && response.data.id) {
+        const userId: string = response.data.id;
+        this.userIdCache = userId;
+        return userId;
+      }
+      
+      throw new Error('User ID not found in response');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          throw new Error(`User not found for email: ${email}`);
+        }
+        throw new Error(`Failed to fetch user: ${error.response?.data?.error || error.message}`);
+      }
+      throw error;
+    }
   }
 
   async createCapture(text: string): Promise<void> {
     const baseUrl = this.getBaseUrl();
-    const userId = this.getUserId();
+    const userId = await this.getUserIdByEmail();
     
     // Sanitize and prepare the text for API submission
     const captureData = {
@@ -47,15 +78,15 @@ export class CaptureService implements ICaptureService {
 
   async listUnmigratedCaptures(): Promise<any[]> {
     const baseUrl = this.getBaseUrl();
-    const userId = this.getUserId();
+    const email = this.getUserEmail();
     
     try {
-      const url = buildApiUrl(baseUrl, `/v1/capture/user/${userId}?migrated=false`);
+      const url = buildApiUrl(baseUrl, `/v1/capture/user/email/${encodeURIComponent(email)}?migrated=false`);
       const response = await axios.get(url);
       return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(`Failed to fetch captures: ${error.response?.data?.message || error.message}`);
+        throw new Error(`Failed to fetch captures: ${error.response?.data?.error || error.message}`);
       }
       throw error;
     }
