@@ -1,6 +1,6 @@
 {
   "name": "divergent-flow-cli",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Divergent Flow CLI - tools empowering neurodivergent minds to flow.",
   "main": "dist/index.js",
   "bin": {
