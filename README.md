@@ -105,7 +105,7 @@ Note: `USER_ID` is optional and intentionally not part of the interactive init w
 
 ## License
 
-MIT
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Author
 
