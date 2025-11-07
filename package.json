@@ -1,45 +1,52 @@
 {
-  "name": "divergent-flow-cli",
-  "version": "0.1.7",
+  "name": "@gibsonsc/divergent-flow-cli",
+  "version": "0.2.0",
   "description": "Divergent Flow CLI - tools empowering neurodivergent minds to flow.",
-  "main": "dist/index.js",
-  "bin": {
-    "divergent-flow": "dist/index.js",
-    "dflw": "dist/index.js"
-  },
-  "scripts": {
-    "build": "tsc",
-    "postbuild": "node ./add-shebang.js",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "test": "jest",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:major": "standard-version --release-as major"
-  },
   "keywords": [
     "cli",
     "neurodivergent",
     "productivity",
     "divergent-flow"
   ],
+  "homepage": "https://github.com/jgsteeler/divergent-flow-cli#readme",
+  "bugs": {
+    "url": "https://github.com/jgsteeler/divergent-flow-cli/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgsteeler/divergent-flow-cli.git"
+  },
+  "license": "MIT",
   "author": "Johnny Gibson <jgibson@gibsonserviceco.com> (GSC Prod, a division of Gibson Service Company, LLC)",
   "contributors": [
-    "GSC Prod <info@gibsonserviceco.com> (a division of Gibson Service Company, LLC)"
+    {
+      "name": "GSC Prod",
+      "email": "info@gibsonserviceco.com",
+      "url": "a division of Gibson Service Company, LLC"
+    }
   ],
-  "copyright": "Copyright (c) 2025 GSC Prod, a division of Gibson Service Company, LLC",
-  "license": "MIT",
   "type": "commonjs",
-  "devDependencies": {
-    "@types/figlet": "^1.5.6",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^20.11.30",
-    "axios": "^1.12.2",
-    "jest": "^30.2.0",
-    "standard-version": "^9.5.0",
-    "ts-jest": "^29.4.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "divergent-flow": "dist/index.js",
+    "dflw": "dist/index.js"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "node ./add-shebang.js",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "boxen": "^7.1.1",
@@ -47,20 +54,28 @@
     "commander": "^14.0.1",
     "cors": "^2.8.5",
     "figlet": "^1.9.3",
+    "axios": "^1.12.2",
     "gradient-string": "^3.0.0",
     "inquirer": "^12.9.6",
     "reflect-metadata": "^0.2.2",
-    "tsyringe": "^4.10.0"
+    "tsyringe": "^4.10.0",
+    "zod": "^3.23.8"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jgsteeler/divergent-flow-cli.git"
+  "devDependencies": {
+    "@types/figlet": "^1.5.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.11.30",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
-  "bugs": {
-    "url": "https://github.com/jgsteeler/divergent-flow-cli/issues"
-  },
-  "homepage": "https://github.com/jgsteeler/divergent-flow-cli#readme",
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "copyright": "Copyright (c) 2025 GSC Prod, a division of Gibson Service Company, LLC"
 }
