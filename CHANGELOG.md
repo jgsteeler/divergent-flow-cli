@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
+
 * update package.json with new metadata and dependencies  ([#1](https://github.com/jgsteeler/divergent-flow-cli/issues/1)) ([e42f6a1](https://github.com/jgsteeler/divergent-flow-cli/commit/e42f6a17ef878c973e6a6e4fe461de985455dc63))
 
 ### [0.1.7](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.6...v0.1.7) (2025-10-29)
