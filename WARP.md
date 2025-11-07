@@ -4,7 +4,7 @@
 Command-line tools empowering neurodivergent minds to flow. TypeScript-based CLI with dependency injection and auto-generated API clients.
 
 ## Technology Stack
-- **Runtime**: Node.js >= 18.0.0
+- **Runtime**: Node.js >= 20.0.0
 - **Language**: TypeScript ^5.9.3
 - **CLI Framework**: Commander.js
 - **DI Container**: tsyringe
