@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.6...v0.1.7) (2025-10-29)
+
+
+### Features
+
+* switch from USER_ID to USER_EMAIL config with email-based API endpoints ([7da6485](https://github.com/jgsteeler/divergent-flow-cli/commit/7da64856dbece5573549e38f82d609c343aa2f1a))
+
 ### [0.1.6](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.5...v0.1.6) (2025-10-26)
 
 ### [0.1.5](https://github.com/jgsteeler/divergent-flow-cli/compare/v0.1.4...v0.1.5) (2025-10-24)

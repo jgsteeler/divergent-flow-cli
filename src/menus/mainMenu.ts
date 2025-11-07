@@ -6,6 +6,8 @@ import { getTheme } from '../config/theme';
 import { capturesMenu } from './capturesMenu';
 import { setConfig } from '../config/config';
 import { divergentDashboard } from './divergentDashboard';
+import { container } from '../di/container';
+import { ICaptureService } from '../interfaces/ICaptureService';
 
 
 interface MenuState {
@@ -17,12 +19,12 @@ export async function mainMenu() {
   const state: MenuState = { isRunning: true };
   
   while (state.isRunning) {
-    showMenuHeader(theme);
+    await showMenuHeader(theme);
     await handleMenuInput(state, theme);
   }
 }
 
-function showMenuHeader(theme: any): void {
+async function showMenuHeader(theme: any): Promise<void> {
   // Add vertical space before menu
   console.log('\n');
   
@@ -37,6 +39,9 @@ function showMenuHeader(theme: any): void {
   const centeredTitle = ' '.repeat(padding) + chalk.hex(theme.gradient[1]).bold(title);
   console.log(centeredTitle);
   console.log('');
+  
+  // Fetch and display unmigrated captures count
+  await showUnmigratedCapturesNotification(theme, terminalWidth);
   
   // Two-column menu layout
   const leftCol = [
@@ -71,6 +76,23 @@ function showMenuHeader(theme: any): void {
   const quitLine = chalk.hex(theme.gradient[0])('q') + chalk.hex(theme.mottoColor)(') Quit dflw');
   console.log(`\n${indent}${quitLine}`);
   console.log('\n');
+}
+
+async function showUnmigratedCapturesNotification(theme: any, terminalWidth: number): Promise<void> {
+  try {
+    const captureService = container.resolve<ICaptureService>('ICaptureService');
+    const captures = await captureService.listUnmigratedCaptures();
+    
+    if (captures.length > 0) {
+      const notification = `📬 ${captures.length} unmigrated capture${captures.length === 1 ? '' : 's'} waiting`;
+      const notificationPadding = Math.max(0, Math.floor((terminalWidth - notification.length) / 2));
+      const centeredNotification = ' '.repeat(notificationPadding) + chalk.hex(theme.gradient[0])(notification);
+      console.log(centeredNotification);
+      console.log('');
+    }
+  } catch (error) {
+    // Silently fail - don't disrupt menu if capture fetch fails
+  }
 }
 
 async function handleMenuInput(state: MenuState, theme: any): Promise<void> {

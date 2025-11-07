@@ -3,6 +3,57 @@
 
 Tools empowering neurodivergent minds to flow.
 
+## Install
+
+Install globally from npm:
+
+```sh
+npm install -g @gibsonsc/divergent-flow-cli
+```
+
+Then run:
+
+```sh
+divergent-flow --help
+```
+
+## Usage
+
+After installing globally, use either `divergent-flow` or the short alias `dflw`:
+
+```sh
+# Show help
+divergent-flow --help
+
+# Show CLI version
+divergent-flow version
+
+# Show API version (calls the Divergent Flow API)
+divergent-flow version api
+
+# First-time setup (guided prompts)
+divergent-flow config init
+
+# View or change config values
+divergent-flow config list
+divergent-flow config get API_BASE_URL
+divergent-flow config set API_BASE_URL http://localhost:3001
+divergent-flow config unset USER_ID
+
+# Quick capture
+divergent-flow dump "Write down that idea quickly"
+
+# Start interactive capture session
+divergent-flow dump session
+```
+
+Configuration is stored in `~/.grindrc` (JSON). Important keys:
+
+- `APP_MODE`: `divergent` (default) or `typical`
+- `API_BASE_URL`: Base URL for the API (e.g., `http://localhost:3001`)
+- `LOG_LEVEL`: `info`, `warn`, `error`, `debug`
+- `USER_ID`: Optional; if set, the CLI includes this when creating captures
+
 ## Prerequisites
 
 - Node.js >= 18
@@ -105,7 +156,7 @@ Note: `USER_ID` is optional and intentionally not part of the interactive init w
 
 ## License
 
-MIT
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Author
 
