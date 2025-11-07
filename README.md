@@ -8,7 +8,7 @@ Tools empowering neurodivergent minds to flow.
 Install globally from npm:
 
 ```sh
-npm install -g divergent-flow-cli
+npm install -g @gibsonsc/divergent-flow-cli
 ```
 
 Then run:
