@@ -1,6 +1,7 @@
 function printHelp() {
   console.log(`\nDivergent Flow CLI Usage\n`);
-  console.log(`  npm dev [command] [options]\n`);
+  console.log(`  divergent-flow [command] [options]`);
+  console.log(`  dflw [command] [options] (alias)\n`);
   console.log(`Commands:`);
   console.log(`  version           Show CLI version`);
   console.log(`  version api       Show API version (calls API)`);
