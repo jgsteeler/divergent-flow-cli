@@ -1,16 +1,24 @@
 import axios from 'axios';
-import { injectable } from 'tsyringe';
+import { injectable, inject } from 'tsyringe';
 import type { ICaptureService } from '../interfaces/ICaptureService';
 import { getConfig } from '../config/config';
 import { normalizeBaseUrl, buildApiUrl } from '../utils/url';
+import { AuthService } from './AuthService';
 
 @injectable()
 export class CaptureService implements ICaptureService {
+  constructor(@inject(AuthService) private authService: AuthService) {}
+
   private userIdCache: string | null = null;
 
   private getBaseUrl(): string {
     const raw = getConfig('API_BASE_URL', 'http://localhost:8080');
     return normalizeBaseUrl(raw as string);
+  }
+
+  private getAuthHeaders(): { Authorization?: string } {
+    const token = this.authService.getStoredToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
   private getUserEmail(): string {
@@ -30,7 +38,9 @@ export class CaptureService implements ICaptureService {
     
     try {
       const url = buildApiUrl(baseUrl, `/v1/user/email/${encodeURIComponent(email)}`);
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: this.getAuthHeaders()
+      });
       
       if (response.data && response.data.id) {
         const userId: string = response.data.id;
@@ -65,7 +75,8 @@ export class CaptureService implements ICaptureService {
       const url = buildApiUrl(baseUrl, '/v1/capture');
       await axios.post(url, captureData, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...this.getAuthHeaders()
         }
       });
     } catch (error) {
@@ -82,7 +93,9 @@ export class CaptureService implements ICaptureService {
     
     try {
       const url = buildApiUrl(baseUrl, `/v1/capture/user/email/${encodeURIComponent(email)}?migrated=false`);
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: this.getAuthHeaders()
+      });
       return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
       if (axios.isAxiosError(error)) {
