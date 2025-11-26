@@ -19,9 +19,22 @@ async function runInitWizard() {
     {
       type: 'input',
       name: 'API_BASE_URL',
-      message: 'Base API URL (e.g. http://localhost:3001):',
-      default: getConfig('API_BASE_URL', 'http://localhost:3001'),
+      message: 'Base API URL (e.g. https://divergent-flow-core.fly.dev):',
+      default: getConfig('API_BASE_URL', 'https://divergent-flow-core.fly.dev'),
       validate: v => /^https?:\/\/.+/.test(v) || 'Enter a valid URL (http/https)',
+    },
+    {
+      type: 'input',
+      name: 'OIDC_ISSUER_URL',
+      message: 'OIDC Issuer URL (e.g. https://divergent-flow-keycloak.fly.dev/realms/df-prod):',
+      default: getConfig('OIDC_ISSUER_URL', 'https://divergent-flow-keycloak.fly.dev/realms/df-prod'),
+      validate: v => /^https?:\/\/.+/.test(v) || 'Enter a valid URL (http/https)',
+    },
+    {
+      type: 'input',
+      name: 'OIDC_CLIENT_ID',
+      message: 'OIDC Client ID (e.g. cli-app):',
+      default: getConfig('OIDC_CLIENT_ID', 'cli-app'),
     },
     {
       type: 'list',

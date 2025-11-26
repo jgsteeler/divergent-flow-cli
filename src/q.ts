@@ -6,6 +6,7 @@ function printHelp() {
   console.log(`  version           Show CLI version`);
   console.log(`  version api       Show API version (calls API)`);
   console.log(`  config [list|get <key>|set <key> <value>]  View or update CLI config (.grindrc)`);
+  console.log(`  auth [login|logout|status]  Authenticate with Divergent Flow`);
   console.log(`  dump <text>       Quick capture text`);
   console.log(`  dump session      Start interactive dump session`);
   console.log(`  dumps             Start interactive dump session (alias)`);
@@ -56,6 +57,12 @@ async function routeCommand(args: string[]) {
   if (args[0] === 'config') {
     const { runConfigCommand } = await import('./commands/config');
     await runConfigCommand(args.slice(1));
+    process.exit(0);
+  }
+  // npm dev auth ...
+  if (args[0] === 'auth') {
+    const { runAuthCommand } = await import('./commands/auth');
+    await runAuthCommand(args.slice(1));
     process.exit(0);
   }
   // npm dev dump session => Start dump session
