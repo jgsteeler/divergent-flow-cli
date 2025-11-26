@@ -1,32 +1,32 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs';
+import { getConfig, setConfig } from '../../src/config/config';
 
 describe('USER_EMAIL config', () => {
-  let origHome: string | undefined;
-  let getConfig: any;
-  let setConfig: any;
-  let grindRcPath: string;
-
-  beforeAll(() => {
-    // point HOME to a temp location to avoid changing actual user rc
-    origHome = process.env.HOME;
-    process.env.HOME = '/tmp';
-    // Ensure module reads the new HOME when computing grindRcPath
-    jest.resetModules();
-    // require after HOME is set so RC_PATH is computed with /tmp
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const cfg = require('../../src/config/config');
-    getConfig = cfg.getConfig;
-    setConfig = cfg.setConfig;
-    grindRcPath = cfg.grindRcPath;
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  afterAll(() => {
-    if (origHome !== undefined) process.env.HOME = origHome;
-    try { fs.unlinkSync('/tmp/.grindrc'); } catch {}
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('set and get USER_EMAIL via setConfig/getConfig', () => {
+    // Mock file operations
+    const fakeRc = {};
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(fakeRc));
+    const writeSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+    
     setConfig('USER_EMAIL', 'test@example.com');
+    
+    // Verify it was written
+    expect(writeSpy).toHaveBeenCalled();
+    const [, content] = writeSpy.mock.calls[0];
+    const written = JSON.parse(content as string);
+    expect(written.USER_EMAIL).toBe('test@example.com');
+    
+    // Now mock reading it back
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify({ USER_EMAIL: 'test@example.com' }));
     const val = getConfig('USER_EMAIL');
     expect(val).toBe('test@example.com');
   });

@@ -1,20 +1,21 @@
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import fs from 'fs';
 import { getConfig, setConfig, grindRcPath } from '../../src/config/config';
 
 describe('getConfig / setConfig', () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('getConfig should return default when rc missing', () => {
-    jest.spyOn(fs, 'readFileSync').mockImplementation(() => { throw new Error('no file'); });
+    vi.spyOn(fs, 'readFileSync').mockImplementation(() => { throw new Error('no file'); });
     const val = getConfig('SOME_KEY', 'defaultVal');
     expect(val).toBe('defaultVal');
   });
 
   it('setConfig should write file with new key', () => {
-    jest.spyOn(fs, 'readFileSync').mockImplementation(() => { throw new Error('no file'); });
-  const writeSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+    vi.spyOn(fs, 'readFileSync').mockImplementation(() => { throw new Error('no file'); });
+  const writeSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
 
     setConfig('MY_KEY', 'myValue');
 
