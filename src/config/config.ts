@@ -13,6 +13,8 @@ export type GrindConfig = {
 export const REQUIRED_KEYS = [
   'APP_MODE',
   'API_BASE_URL',
+  'OIDC_ISSUER_URL',
+  'OIDC_CLIENT_ID',
   'LOG_LEVEL',
 ];
 

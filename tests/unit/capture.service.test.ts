@@ -1,22 +1,37 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import axios from 'axios';
 
-jest.mock('axios');
+vi.mock('axios');
 
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockedAxios = axios as any;
 
 // Mock getConfig from the config module
-jest.mock('../../src/config/config', () => ({
-  getConfig: jest.fn(),
+vi.mock('../../src/config/config', () => ({
+  getConfig: vi.fn(),
+}));
+
+// Mock AuthService
+vi.mock('../../src/services/AuthService', () => ({
+  AuthService: vi.fn().mockImplementation(() => ({
+    getStoredToken: vi.fn().mockReturnValue('mock-token'),
+  })),
 }));
 
 import { getConfig } from '../../src/config/config';
 import { CaptureService } from '../../src/services/CaptureService';
+import { AuthService } from '../../src/services/AuthService';
 
-const mockedGetConfig = getConfig as jest.MockedFunction<typeof getConfig>;
+const mockedGetConfig = getConfig as any;
 
 describe('CaptureService (USER_EMAIL)', () => {
+  let mockAuthService: any;
+  
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
+    // Create a simple mock object instead of relying on the mocked class
+    mockAuthService = {
+      getStoredToken: vi.fn().mockReturnValue('mock-token'),
+    };
   });
 
   it('should use USER_EMAIL from config and fetch userId for createCapture', async () => {
@@ -32,7 +47,7 @@ describe('CaptureService (USER_EMAIL)', () => {
     });
     mockedAxios.post.mockResolvedValueOnce({ status: 201 });
 
-    const svc = new CaptureService();
+    const svc = new CaptureService(mockAuthService);
     await svc.createCapture('hello world');
 
     // Verify user lookup was called
@@ -55,7 +70,7 @@ describe('CaptureService (USER_EMAIL)', () => {
 
     mockedAxios.get.mockResolvedValueOnce({ data: [{ id: 'c1' }, { id: 'c2' }] });
 
-    const svc = new CaptureService();
+    const svc = new CaptureService(mockAuthService);
     const result = await svc.listUnmigratedCaptures();
 
     expect(result).toEqual([{ id: 'c1' }, { id: 'c2' }]);
@@ -71,7 +86,7 @@ describe('CaptureService (USER_EMAIL)', () => {
       return def;
     });
 
-    const svc = new CaptureService();
+    const svc = new CaptureService(mockAuthService);
     
     await expect(svc.createCapture('test')).rejects.toThrow(
       'USER_EMAIL not configured. Please set it using: dflw config set USER_EMAIL <your-email>'
@@ -91,7 +106,7 @@ describe('CaptureService (USER_EMAIL)', () => {
     });
     mockedAxios.post.mockResolvedValue({ status: 201 });
 
-    const svc = new CaptureService();
+    const svc = new CaptureService(mockAuthService);
     
     // First call should fetch user
     await svc.createCapture('first');

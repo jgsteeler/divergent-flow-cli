@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { runVersionCommand } from '../../src/commands/version';
 
 describe('runVersionCommand', () => {
