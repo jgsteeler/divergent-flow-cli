@@ -3,7 +3,7 @@ import { getConfig, setConfig } from '../config/config';
 const ENV_PRESETS: Record<string, { API_BASE_URL: string; OIDC_ISSUER_URL: string; OIDC_CLIENT_ID?: string }> = {
   stage: {
     API_BASE_URL: 'https://divergent-flow-core-staging.fly.dev',
-    OIDC_ISSUER_URL: 'https://divergent-flow-keycloak.fly.dev/realms/df-stage',
+    OIDC_ISSUER_URL: 'https://divergent-flow-keycloak.fly.dev/realms/df-staging',
     OIDC_CLIENT_ID: 'cli-app',
   },
   prod: {
