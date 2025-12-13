@@ -1,7 +1,18 @@
-
 # Divergent Flow CLI
 
+> ## 🗄️ **ARCHIVED REPOSITORY**
+> 
+> **This repository is no longer actively maintained.** Development has moved to [divergent-flow-mvp](https://github.com/jgsteeler/divergent-flow-mvp).
+> 
+> This codebase serves as a reference implementation for CLI patterns in TypeScript/Node.js but is being replaced with a simpler MVP approach. See [ARCHIVE.md](ARCHIVE.md) for the full story and rationale.
+> 
+> **Active Project:** [jgsteeler/divergent-flow-mvp](https://github.com/jgsteeler/divergent-flow-mvp)
+
+---
+
 Tools empowering neurodivergent minds to flow.
+
+**⚠️ Note:** This is archived reference code. For active development, see [divergent-flow-mvp](https://github.com/jgsteeler/divergent-flow-mvp).
 
 ## Install
 
